@@ -7,6 +7,7 @@ import Login from './component/login/Login'
 import View from './component/view/View';
 import AddProduct from './component/addProduct/AddProduct';
 import ShowProduct from './component/showProduct/ShowProduct';
+import MyCart from './component/myCart/MyCart';
 
 export default function Header() {
     const context = useContext(UserContext)
@@ -34,27 +35,28 @@ export default function Header() {
                                             <>
                                                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                                     <li className="nav-item active "></li>
-                                                    <li className="nav-item active ">
-                                                        <Link className="nav-link" to='/addProduct'>App Product</Link>
-                                                    </li>
-                                                    <li className="nav-item active ">
-                                                        <Link className="nav-link" to='/showProduct'>Product</Link>
-                                                    </li>
-                                                </ul>
-                                                <ul className="navbar-nav">
-                                                    <li className="nav-item active ">
-                                                        <Link className="nav-link" to='/myWishlist'>MyWishlist</Link>
-                                                    </li>
-                                                    <li className="nav-item active ">
-                                                        <Link className="nav-link" to='/myCart'>My Cart</Link>
-                                                    </li>
+
                                                     <Link className="nav-link active" to='/' onClick={() => context.setLogin(false)}>Logout</Link>
                                                 </ul>
                                             </>)
                                     }
                                     else {
-                                        return (
+                                        return (<>
                                             <ul className="navbar-nav ">
+                                                <li className="nav-item active ">
+                                                    <Link className="nav-link" to='/addProduct'>App Product</Link>
+                                                </li>
+                                                <li className="nav-item active ">
+                                                    <Link className="nav-link" to='/showProduct'>Product</Link>
+                                                </li>
+                                            </ul>
+                                            <ul className="navbar-nav">
+                                                <li className="nav-item active ">
+                                                    <Link className="nav-link" to='/myWishlist'>MyWishlist</Link>
+                                                </li>
+                                                <li className="nav-item active ">
+                                                    <Link className="nav-link" to='/myCart'>My Cart</Link>
+                                                </li>
                                                 <li className="nav-item active ">
                                                     <Link className="nav-link" to='/createaccount'>Register</Link>
                                                 </li>
@@ -62,6 +64,7 @@ export default function Header() {
                                                     <Link className="nav-link " to='/login'>Login</Link>
                                                 </li>
                                             </ul>
+                                        </>
                                         )
                                     }
                                 }
@@ -74,7 +77,7 @@ export default function Header() {
             <Route path='/addProduct' component={AddProduct} />
             <Route path='/showProduct' component={ShowProduct} />
             <Route path='/myWishlist' />
-            <Route path='/myCart' />
+            <Route path='/myCart' component={MyCart} />
             <Route exact path='/' component={Home} />
             <Route path='/createAccount' component={CreateAccount} />
             {context.login ? null : <Route path='/login' component={Login} />}

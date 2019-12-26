@@ -47,9 +47,10 @@ export default function ShowProduct() {
             })
         }
         if (arr) {
-
+            setProduct({ data1: arr })
+        } else {
+            setProduct([])
         }
-        setProduct({ data1: arr })
     }
 
     let handleClick = (val) => {
@@ -58,7 +59,6 @@ export default function ShowProduct() {
 
         a.map((e) => {
             if (e.id === val.id) {
-
                 return val.wish = !val.wishh
             }
             return val
@@ -70,6 +70,12 @@ export default function ShowProduct() {
         const cartItem = val
         const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
         const response = await Axios.post(url, cartItem)
+        if (response.status === 200) {
+            console.log('OK')
+        }
+        else {
+            console.log("err")
+        }
 
     }
 
@@ -80,19 +86,18 @@ export default function ShowProduct() {
             {product.data1.map((val) => {
                 return (
                     <div className='container-fluid mt-4'>
-                        <div className='col-md-3 col-sm-3 col-3 mt-2 card float-left'>
-                            <div className='card-body'>
+                        <div className='col-md-3 col-sm-6 col-12 mt-2 card float-left'>
+                            <div key={val.id} className='card-body'>
 
-                                <div key={val.id}>
-                                    {val.wish ? <i style={{ color: 'red' }} onClick={() => { handleClick(val) }} className="fa fa-heart"></i> :
-                                        <i onClick={() => { handleClick(val) }} className="fa fa-heart-o"></i>}
-                                    <img className='card-img-top' width='100%' height='205px' src={val.img} alt='pimg' ></img>
-                                    <p className='card-text'><h5>{val.itemName}</h5></p>
-                                    <p className='card-text'><h5>{val.brand}</h5></p>
-                                    <p className='card-text'><h5>Rs. {val.price}</h5></p>
-                                    <button className='btn btn-outline-primary '>Buy Now</button>
-                                    <button className='btn btn-outline-danger ml-2' onClick={() => { addTocart(val) }}>Add to Cart</button>
-                                </div>
+                                {val.wish ? <i style={{ color: 'red' }} onClick={() => { handleClick(val) }} className="fa fa-heart"></i> :
+                                    <i onClick={() => { handleClick(val) }} className="fa fa-heart-o"></i>}
+                                <img className='card-img-top' width='100%' height='205px' src={val.img} alt='pimg' ></img>
+                                <p className='card-text'><h5>{val.itemName}</h5></p>
+                                <p className='card-text'><h5>{val.brand}</h5></p>
+                                <p className='card-text'><h5>Rs. {val.price}</h5></p>
+                                <button className='btn btn-outline-primary '>Buy Now</button>
+                                <button className='btn btn-outline-danger ml-2' onClick={() => { addTocart(val) }}>Add to Cart</button>
+
                             </div>
                         </div>
                     </div>

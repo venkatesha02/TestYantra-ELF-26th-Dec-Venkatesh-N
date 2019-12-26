@@ -38,9 +38,6 @@ export default class View extends Component {
     };
 
 
-
-
-
     // Getting data from back-end using Axios api
     getAllAccounts = () => {
         const url = 'https://react-employee-7f915.firebaseio.com/employeeAccount.json'

@@ -117,7 +117,7 @@ export default function CreateAccount(props) {
         Axios.post(url, formData)//it is a api call it returns a promise
             .then((response) => {
                 if (response.status === 200) {
-                    console.log("Data added")
+                    //console.log("Data added")
                     props.history.push("/Login")// navigate the page   programatically
                 }
             })
