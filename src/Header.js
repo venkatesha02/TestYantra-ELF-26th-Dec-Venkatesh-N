@@ -44,6 +44,9 @@ export default function Header() {
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/myCart'>My Cart</Link>
                                                         </li>
+                                                        <li className="nav-item active ">
+                                                            <Link className="nav-link" to=''>My Account</Link>
+                                                        </li>
                                                     </ul>
                                                     <ul className='navbar-nav'>
                                                         <Link className="nav-link active" to='/' onClick={() => context.setLogin(false)}>Logout</Link>
@@ -67,11 +70,15 @@ export default function Header() {
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/myCart'>My Cart</Link>
                                                         </li>
+                                                        <li className="nav-item active ">
+                                                            <Link className="nav-link" to=''>My Account</Link>
+                                                        </li>
                                                     </ul>
                                                     <ul className='navbar-nav'>
                                                         <Link className="nav-link active" to='/' onClick={() => context.setLogin(false)}>Logout</Link>
                                                     </ul>
-                                                </>)
+                                                </>
+                                                )
                                         }
 
                                     }
@@ -101,11 +108,11 @@ export default function Header() {
             <Route path='/createAccount' component={CreateAccount} />
             <Route path='/login' component={Login} />
             {context.login ? <>
-                <Route path='/view' component={View} />
                 <Route path='/addProduct' component={AddProduct} />
                 <Route path='/showProduct' component={ShowProduct} />
                 <Route path='/myWishlist' component={WishList} />
                 <Route path='/myCart' component={MyCart} />
+                <Route path='/myAccount'/>
             </> : null}
 
         </Router >

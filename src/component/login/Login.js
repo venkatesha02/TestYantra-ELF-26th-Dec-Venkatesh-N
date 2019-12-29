@@ -90,7 +90,8 @@ export default function Login(props) {
     //let name = { color: 'red', fontSize: '12px' }
     return (
         <>
-            {isValid ? <h5 style={{color:'red'}}>Invalid Credencials</h5> : <div className='col-md-4 col-sm-4 col-4 offset-4 card card-body mt-5'>
+            <div className='col-md-4 col-sm-4 col-4 offset-4 card card-body mt-5'>
+            {isValid?<h5 className="card-text text-center" style={{color:'red'}}>Invalid Email or Password!!</h5>:null}
                 <form onSubmit={validForm}>
                     <legend className='text-center'><b>Login Account</b></legend><br></br>
                     <div class="form-group row">
@@ -121,7 +122,7 @@ export default function Login(props) {
                     <button type="submit" className="col-sm-5 col-md-5 col-5 offset-4 btn btn-outline-primary" >Login </button>
 
                 </form>
-            </div>}
+            </div>
 
         </>
     )
