@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Axios from 'axios';
 
 export default function AddProduct(props) {
@@ -15,12 +15,15 @@ export default function AddProduct(props) {
     const [noqErr, setNoqErr] = useState(false)
     const [imgErr, setImgErr] = useState(false)
 
-    useEffect(() => {
-
-
-    }, [itemName, brand, price, noq, img, itemNameErr, brandErr, priceErr, noqErr, imgErr])
+    const isTrue=()=>{
+        if (validForm) {
+            handleSubmit()
+        }
+    }
+    
 
     const validForm = (event) => {
+        
         event.preventDefault()
 
         const isValid = true
@@ -30,7 +33,7 @@ export default function AddProduct(props) {
         }
         else {
             setItemNameErr(true)
-            return isValid
+          
 
         }
         if (brand.trim().match(/^[a-zA-Z ]*$/) && brand !== '') {
@@ -39,7 +42,7 @@ export default function AddProduct(props) {
         }
         else {
             setBrandErr(true)
-            return isValid
+         
 
         }
         if (price.trim().match(/^[0-9]*$/) && price !== '') {
@@ -47,7 +50,7 @@ export default function AddProduct(props) {
         }
         else {
             setPriceErr(true)
-            return isValid
+            
 
         }
         if (noq.trim().match(/^[0-9]*$/) && noq !== "") {
@@ -56,7 +59,7 @@ export default function AddProduct(props) {
         }
         else {
             setNoqErr(true)
-            return isValid
+           
 
         }
 
@@ -65,15 +68,11 @@ export default function AddProduct(props) {
         }
         else {
             setImgErr(true)
-            return isValid
+            
 
         }
-        sendCorrect(isValid)
-    }
-
-    const sendCorrect = (isValid) => {
         if (itemNameErr !== true && brandErr !== true && priceErr !== true && noqErr !== true && imgErr !== true) {
-            handleSubmit()
+            return isValid
         }
     }
 

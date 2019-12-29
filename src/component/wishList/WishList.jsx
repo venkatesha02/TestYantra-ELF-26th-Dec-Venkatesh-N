@@ -4,6 +4,8 @@ import { useState } from 'react'
 
 export default function WishList() {
 
+    const mobile = localStorage.getItem('mobile')
+
     const [items, setItems] = useState({ allData: [] })
 
     useEffect(() => {
@@ -12,9 +14,10 @@ export default function WishList() {
 
     }, [])
 
+
     // Getting data from server
     let getAllAccounts = async () => {
-        const url = 'https://react-magicshopping.firebaseio.com/wishList.json'
+        const url = `https://react-magicshopping.firebaseio.com/wishlist${mobile}.json`
         try {
             const response = await Axios.get(url)
             //console.log("Response ", response)
@@ -34,10 +37,13 @@ export default function WishList() {
         }
     }
 
+
     const removeWishList = async (val) => {
         const id = val.id;
-        const url = 'https://react-magicshopping.firebaseio.com/wishList/' + id + '/.json'
+       
+        const url = `https://react-magicshopping.firebaseio.com/wishlist${mobile}/${id}/.json`
 
+        //const url = 'https://react-magicshopping.firebaseio.com/wishList/' + id + '/.json'
         try {
             const response = await Axios.delete(url)
             const myAccount = [...items.allData]
@@ -48,7 +54,7 @@ export default function WishList() {
 
             setItems({ allData: myAccount })
 
-            console.log("Response ", response)
+            //console.log("Response ", response)
         }
         catch (error) {
             console.log("Error ", error)

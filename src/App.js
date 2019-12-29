@@ -4,9 +4,14 @@ import { UserProvider } from './context/userAuthentication';
 
 class App extends React.Component {
   state = {
-    login:false,
-    user:false,
-    setUser:(e)=>{
+    login: false,
+    user: false,
+
+    data: null,
+    setMyAc: (e) => {
+      this.setMyAcount(e)
+    },
+    setUser: (e) => {
       this.setIsUser(e)
     },
     setLogin: (e) => {
@@ -21,12 +26,21 @@ class App extends React.Component {
     })
   }
 
-  setIsUser=(e)=>{
+  setIsUser = (e) => {
     this.setState({
       ...this.state,
       user: e
     })
   }
+
+  setMyAcount = (e) => {
+    this.setMyAc({
+      ...this.state,
+      data: e
+    })
+    console.log(this.state.data)
+  }
+
   render() {
     return (
       <div>

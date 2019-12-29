@@ -21,6 +21,13 @@ export default function CreateAccount(props) {
     const [genderErr, setGenderErr] = useState(false)
     const [roleErr, setRoleErr] = useState(false)
 
+
+    let istrue = () => {
+        if (validForm) {
+            handleSubmit()
+        }
+    }
+
     const validForm = (event) => {
         event.preventDefault()
         const isValid = true
@@ -30,8 +37,7 @@ export default function CreateAccount(props) {
         }
         else {
             setUserNameErr(true)
-            return isValid
-
+            // return isValid
         }
 
         if (userEmail.trim().match(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i)) {
@@ -40,7 +46,7 @@ export default function CreateAccount(props) {
         }
         else {
             setUserEmailErr(true)
-            return isValid
+            // return isValid
 
         }
 
@@ -49,7 +55,7 @@ export default function CreateAccount(props) {
         }
         else {
             setUserMobileErr(true)
-            return isValid
+            // return isValid
 
         }
 
@@ -59,16 +65,16 @@ export default function CreateAccount(props) {
         }
         else {
             setUserPassErr(true)
-            return isValid
+            // return isValid
 
         }
 
-        if (userPass === conPass) {
+        if (userPass === conPass && conPass !== '') {
             setConPassErr(false)
         }
-        else{
+        else {
             setConPassErr(true)
-            return isValid
+            //return isValid
         }
 
 
@@ -77,26 +83,22 @@ export default function CreateAccount(props) {
         }
         else {
             setRoleErr(true)
-            return isValid
+            // return isValid
 
         }
 
         if (gender !== '') {
-            setGenderErr(false)
+            //await setGenderErr(false)
         }
         else {
             setGenderErr(true)
+            //return isValid
+
+        }
+        if (userNameErr !== true && userEmailErr !== true && userMobileErr !== true && userPassErr !== true && genderErr !== true && roleErr !== true && conPassErr !== true) {
             return isValid
-
         }
 
-        sendCorrect(isValid)
-    }
-
-    const sendCorrect = (isValid) => {
-        if (userNameErr !== true && userEmailErr !== true && userMobileErr !== true && userPassErr !== true && genderErr !== true && roleErr !== true) {
-            handleSubmit()
-        }
     }
 
     const data = {
@@ -108,22 +110,23 @@ export default function CreateAccount(props) {
         role: role
     }
 
-    const handleSubmit = () => {
-        //event.preventDefault()
-        const formData = data
-        //console.log('sdhgfj', formData)
-        const url = 'https://react-magicshopping.firebaseio.com/users.json'
+    const handleSubmit = async () => {
 
-        Axios.post(url, formData)//it is a api call it returns a promise
-            .then((response) => {
-                if (response.status === 200) {
-                    //console.log("Data added")
-                    props.history.push("/Login")// navigate the page   programatically
-                }
-            })
-            .catch((err) => {
-                console.log("Error ", err)
-            })
+        const formData = data
+        const url = 'https://react-magicshopping.firebaseio.com/users.json'
+        try {
+            const response = await Axios.post(url, formData)//it is a api call it returns a promise
+
+            if (response.status === 200) {
+
+                props.history.push("/Login")// navigate the page   programatically
+
+            }
+        }
+
+        catch (err) {
+            console.log("Error ", err)
+        }
     }
 
     return (
@@ -138,7 +141,7 @@ export default function CreateAccount(props) {
                             value={userName}
                             placeholder="Enter name"
                             onChange={(e) => { setUserName(e.target.value) }} />
-                        {userNameErr ? <p style={{ color: 'red', fontSize: '12px' }}>Only Letters</p> : null}
+                        {userNameErr ? <p style={{ color: 'red', fontSize: '12px' }}>Username Should be Characters only [A-Z and a-z]</p> : null}
                     </div>
                 </div>
 
@@ -170,9 +173,9 @@ export default function CreateAccount(props) {
                 <div class="form-group row">
                     <label className="col-sm-3 col-form-label">Gender</label>
                     <div class="col-sm-8" >
-                        <input type="radio" name="gender" value='M' onChange={(e) => { setGender(e.target.value) }} /> Male
-                        <input type="radio" name="gender" value='F' onChange={(e) => { setGender(e.target.value) }} /> Female
-                        <input type="radio" name="gender" value='O' onChange={(e) => { setGender(e.target.value) }} /> Other
+                        <input type="radio" name="gender" value='Male' onChange={(e) => { setGender(e.target.value) }} /> Male
+                        <input type="radio" name="gender" value='Female' onChange={(e) => { setGender(e.target.value) }} /> Female
+                        <input type="radio" name="gender" value='Other' onChange={(e) => { setGender(e.target.value) }} /> Other
                 {genderErr ? <p style={{ color: 'red', fontSize: '12px' }}>Select Gender</p> : null}
                     </div>
 
@@ -214,7 +217,6 @@ export default function CreateAccount(props) {
                         {conPassErr ? <p style={{ color: 'red', fontSize: '12px' }}>Password Should be Match</p> : null}
                     </div>
                 </div>
-
                 <button className="btn btn-outline-info col-md-6 col-sm-6 col-6 offset-3 mt-3" id="login" type="submit">Create Account</button>
             </form>
         </div>

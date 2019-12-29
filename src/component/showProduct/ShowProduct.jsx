@@ -4,11 +4,10 @@ import Search from '../search/Search'
 
 export default function ShowProduct() {
 
+    const mobile=localStorage.getItem('mobile')
+
     // getting all itms from database
     const [items, setItems] = useState([])
-
-    // wishlist deleting
-    const [delItem, setDelItem] = useState({ del: [] })
 
     // wishlist clicks
     const [wishh] = useState(true)
@@ -16,8 +15,6 @@ export default function ShowProduct() {
     // filterd Items
     const [product, setProduct] = useState({ data1: [] })
 
-
-    const[count,setCount]=useState(0)
     useEffect(() => {
 
         getAllAccounts();
@@ -51,7 +48,7 @@ export default function ShowProduct() {
     let searchProduct = (event) => {
         let inputs = event
         const data = items.filter(val => val.itemName.startsWith(inputs))
-        console.log('dfh', data)
+        //console.log('dfh', data)
         let arr = [];
         for (const key in data) {
             arr.push({
@@ -65,10 +62,10 @@ export default function ShowProduct() {
             setProduct({ data1: [] })
         }
     }
-    
+
     let handleClick = async (val) => {
 
-        console.log(val.id)
+        //console.log(val.id)
         let a = product.data1
         a.map((e) => {
             if (e.id === val.id) {
@@ -79,64 +76,40 @@ export default function ShowProduct() {
         })
         setProduct({ data1: a })
 
+
         //checking wishlist
         if (val.wish) {
 
-            if (count === 0) {
-                const wishItem = val
-                const url = 'https://react-magicshopping.firebaseio.com/wishList.json'
-                try {
-                    const response = await Axios.post(url, wishItem)
-                    
-                    //let fetchedAccount = [] //creating new array 
-                    console.log("Response ", response)
+            const wishItem = val
+            const url = `https://react-magicshopping.firebaseio.com/wishlist${mobile}.json`
 
-                    /* for (let key in response.data) {
-                        let account = response.data[key]
+            //const url = 'https://react-magicshopping.firebaseio.com/wishList.json'
+            try {
+                const response = await Axios.post(url, wishItem)
+                if (response.status === 200) {
 
-                        fetchedAccount.push({ // adding all the object to array
-                            ...account,//adding new id to object
-                            //id1: key
-                        })
-                        setDelItem({ del: fetchedAccount })
-                    } */
+                   // console.log("Response ", response)
+                    console.log('Data Added', response.data)
+                } else {
+                    console.log("Err")
                 }
-                catch (err) {
-                    console.log("Err", err)
-                }
+
+            }
+            catch (err) {
+                console.log("Err", err)
 
             }
         }
         else {
-           
-            const id = val.id1;
-            //console.log('delete ', id)
-            const url = 'https://react-magicshopping.firebaseio.com/wishList/' + id + '/.json'
 
-            try {
-                const response = await Axios.delete(url)
-                //console.log("Deleted Item ", response)
-                const myAccount = [...delItem.del]
-                const index = myAccount.indexOf(val)
-
-                console.log(response.data)
-                myAccount.splice(index, 1)
-                //console.log('myAccount ', myAccount)
-
-                setDelItem({ del: myAccount })
-
-                console.log("Response ", response)
-            }
-            catch (error) {
-                console.log("Error ", error)
-
-            }
+            console.log('wishlist Deleted')
         }
     }
 
+    //console.log(mobile)
     const addTocart = async (val) => {
         const cartItem = val
-        const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
+        const url = `https://react-magicshopping.firebaseio.com/cart${mobile}.json`
         try {
 
             const response = await Axios.post(url, cartItem)
@@ -160,10 +133,10 @@ export default function ShowProduct() {
             {product.data1.map((val) => {
                 return (
                     <div className='container-fluid mt-4'>
-                        <div className='col-md-3 col-sm-6 col-12 mt-2 card float-left'>
+                        <div className='col-md-3 col-sm-12 col-12 mt-2 card float-left'>
                             <div key={val.id} className='card-body'>
 
-                                {val.wish ? <i style={{ color: 'red' }} onClick={() => { handleClick(val) }} className="fa fa-heart"></i> :
+                                {val.wish ? <i style={{ color: 'red' }} /* onClick={() => { handleClick(val) }} */ className="fa fa-heart"></i> :
                                     <i onClick={() => { handleClick(val) }} className="fa fa-heart-o"></i>}
                                 <img className='card-img-top' width='100%' height='205px' src={val.img} alt='pimg' ></img>
                                 <p className='card-text'><h5>{val.itemName}</h5></p>

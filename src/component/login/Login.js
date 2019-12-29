@@ -7,11 +7,9 @@ export default function Login(props) {
     const context = useContext(UserContext)
 
     const [isValid, setIsValid] = useState(false)
-    //const [display, setdisplay] = useState(false)
-    //const [data, setData] = useState([])
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
 
     const [emailErr, setEmailErr] = useState(false)
     const [passwordErr, setPasswordErr] = useState(false)
@@ -21,18 +19,25 @@ export default function Login(props) {
         password: password
     }
 
-
-    const validForm = (event) => {
-        const isValid = true
-
+    const isTrue = (event) => {
+        //debugger
         event.preventDefault()
-        if (email.trim().match(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i)) {
+        if (validForm()) {
+            authenticate()
+        }
+    }
+
+
+    const validForm = () => {
+        const isCorrect = true
+
+        if (email.trim().match(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i) && email !== '') {
             setEmailErr(false)
 
         }
         else {
             setEmailErr(true)
-            return isValid
+            //return isValid
 
         }
         if (password.match(/^.*(?=.{5,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&]).*$/) && password !== "") {
@@ -41,14 +46,15 @@ export default function Login(props) {
         }
         else {
             setPasswordErr(true)
-            return isValid
+            //return isValid
         }
-        sendCorrect(isValid)
+        return sedCorr()
+
     }
 
-    const sendCorrect = (isValid) => {
+    let sedCorr = async () => {
         if (emailErr !== true && passwordErr !== true) {
-            authenticate()
+            return true
 
         }
     }
@@ -63,22 +69,35 @@ export default function Login(props) {
             for (let key in response.data) {
                 let account = response.data[key]
                 let auth = valid
+                console.log(auth.email)
+                console.log(auth.password)
                 if (auth.email === account.userEmail && auth.password === account.userPass) {
+
                     if (account.role === 'user') {
-                        console.log("user")
+
+                        localStorage.setItem('data', account)
+
                         props.history.push('/showProduct')
                         context.setUser(true)
                         context.setLogin(true)
 
+
                     } else {
-                        console.log("Admin")
+
+
+                        localStorage.setItem('email', account.userEmail)
+                        localStorage.setItem('name', account.userName)
+                        localStorage.setItem('mobile', account.userMobile)
+                        localStorage.setItem('gen', account.gender)
+
                         context.setLogin(true)
                         context.setUser(false)
                         props.history.push('/showProduct')
+
                     }
                 }
                 else {
-
+                    console.log('invalid')
                     setIsValid(true)
                 }
             }
@@ -87,12 +106,13 @@ export default function Login(props) {
             console.log("Erroo ", err)
         }
     }
-    //let name = { color: 'red', fontSize: '12px' }
+
     return (
         <>
+
             <div className='col-md-4 col-sm-4 col-4 offset-4 card card-body mt-5'>
-            {isValid?<h5 className="card-text text-center" style={{color:'red'}}>Invalid Email or Password!!</h5>:null}
-                <form onSubmit={validForm}>
+                {isValid ? <h5 className="card-text text-center" style={{ color: 'red' }}>Invalid Email or Password!!</h5> : null}
+                <form onSubmit={isTrue}>
                     <legend className='text-center'><b>Login Account</b></legend><br></br>
                     <div class="form-group row">
                         <label className="col-sm-3 col-form-label">Email Id</label>
@@ -126,5 +146,4 @@ export default function Login(props) {
 
         </>
     )
-
 }

@@ -3,6 +3,7 @@ import Axios from 'axios'
 import { useState } from 'react'
 
 export default function MyCart() {
+    const mobile = localStorage.getItem('mobile')
 
     //const [quantiy, setQuantiy] = useState('')
     const [items, setItems] = useState({ allData: [] })
@@ -15,7 +16,9 @@ export default function MyCart() {
     // Getting data from server
     let getAllAccounts = async () => {
 
-        const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
+        const url = `https://react-magicshopping.firebaseio.com/cart${mobile}.json`
+
+        //const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
 
         try {
             const response = await Axios.get(url)
@@ -55,7 +58,10 @@ export default function MyCart() {
     }
     const removeCart = async (val) => {
         const id = val.id;
-        const url = 'https://react-magicshopping.firebaseio.com/addtoCart/' + id + '/.json'
+
+        const url = `https://react-magicshopping.firebaseio.com/cart${mobile}/${id}/.json`
+
+        //const url = 'https://react-magicshopping.firebaseio.com/addtoCart/' + id + '/.json'
 
         try {
             const response = await Axios.delete(url)
@@ -120,7 +126,7 @@ export default function MyCart() {
                         <div className='card-body'>
 
                             <h2 className='card-text'>PRICE DETAILS</h2>
-                            <p className='card-text'><h5>Price ({items.allData.length} itmes)  :  {tc}</h5></p>
+                            <p className='card-text'><h5>Price ({items.allData.length} itmes)  :  {rs}</h5></p>
                             <p className='card-text'><h5>Delivery Fee :  Free</h5></p>
                             <p className='card-text'><h5>----------------------------</h5></p>
                             <p className='card-text'><h5>Payable Amount : {rs}</h5></p>
