@@ -5,14 +5,26 @@ import { UserProvider } from './context/userAuthentication';
 class App extends React.Component {
   state = {
     login:false,
+    user:false,
+    setUser:(e)=>{
+      this.setIsUser(e)
+    },
     setLogin: (e) => {
       this.setLogout(e)
     }
   }
+
   setLogout = (e) => {
     this.setState({
       ...this.state,
       login: e
+    })
+  }
+
+  setIsUser=(e)=>{
+    this.setState({
+      ...this.state,
+      user: e
     })
   }
   render() {

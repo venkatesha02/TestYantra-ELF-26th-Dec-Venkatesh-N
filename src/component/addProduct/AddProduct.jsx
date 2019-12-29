@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
 
 export default function AddProduct(props) {
@@ -15,9 +15,14 @@ export default function AddProduct(props) {
     const [noqErr, setNoqErr] = useState(false)
     const [imgErr, setImgErr] = useState(false)
 
+    useEffect(() => {
+
+
+    }, [itemName, brand, price, noq, img, itemNameErr, brandErr, priceErr, noqErr, imgErr])
+
     const validForm = (event) => {
         event.preventDefault()
-        
+
         const isValid = true
 
         if (itemName.trim().match(/^[a-zA-Z ]*$/) && itemName !== '') {
@@ -37,7 +42,7 @@ export default function AddProduct(props) {
             return isValid
 
         }
-        if (price.trim().match(/^[0-9]*$/) && price!=='') {
+        if (price.trim().match(/^[0-9]*$/) && price !== '') {
             setPriceErr(false)
         }
         else {
@@ -85,22 +90,22 @@ export default function AddProduct(props) {
         const formData = data
         //console.log('sdhgfj', formData)
         const url = 'https://react-magicshopping.firebaseio.com/addproduct.json'
+        try {
+            let response = await Axios.post(url, formData)//it is a api call it returns a promise
 
-        await Axios.post(url, formData)//it is a api call it returns a promise
-            .then((response) => {
-                if (response.status === 200) {
-                    setItemName('')
-                    setNoq('')
-                    setPrice('')
-                    setImg('')
-                    setBrand('')
-                    console.log("Data added")
-                    //props.history.push("/Login")// navigate the page   programatically
-                }
-            })
-            .catch((err) => {
-                console.log("Error ", err)
-            })
+            if (response.status === 200) {
+                setItemName('')
+                setNoq('')
+                setPrice('')
+                setImg('')
+                setBrand('')
+                console.log("Data added")
+                //props.history.push("/Login")// navigate the page   programatically
+            }
+        }
+        catch (err) {
+            console.log("Error ", err)
+        }
     }
 
     return (
