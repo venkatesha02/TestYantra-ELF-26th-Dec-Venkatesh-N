@@ -88,8 +88,6 @@ export default function ShowProduct() {
                 try {
                     const response = await Axios.post(url, wishItem)
                     
-                    
-                    //setCount(count++)
                     //let fetchedAccount = [] //creating new array 
                     console.log("Response ", response)
 
