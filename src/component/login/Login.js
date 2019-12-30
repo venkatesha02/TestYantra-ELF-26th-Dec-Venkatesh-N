@@ -29,7 +29,7 @@ export default function Login(props) {
 
 
     const validForm = () => {
-        const isCorrect = true
+       // const isCorrect = true
 
         if (email.trim().match(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i) && email !== '') {
             setEmailErr(false)
@@ -73,26 +73,23 @@ export default function Login(props) {
                 console.log(auth.password)
                 if (auth.email === account.userEmail && auth.password === account.userPass) {
 
+                    localStorage.setItem('email', account.userEmail)
+                    localStorage.setItem('name', account.userName)
+                    localStorage.setItem('mobile', account.userMobile)
+                    localStorage.setItem('gen', account.gender)
+
+                    localStorage.setItem('status',true)
+                    localStorage.setItem('id',key)
+                    
                     if (account.role === 'user') {
-
-                        localStorage.setItem('data', account)
-
+                       
                         props.history.push('/showProduct')
                         context.setUser(true)
-                        context.setLogin(true)
-
 
                     } else {
-
-
-                        localStorage.setItem('email', account.userEmail)
-                        localStorage.setItem('name', account.userName)
-                        localStorage.setItem('mobile', account.userMobile)
-                        localStorage.setItem('gen', account.gender)
-
-                        context.setLogin(true)
-                        context.setUser(false)
+                        
                         props.history.push('/showProduct')
+                        context.setUser(false)
 
                     }
                 }

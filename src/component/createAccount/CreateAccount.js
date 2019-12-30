@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
 //import { Link } from 'react-router-dom';
 
@@ -22,14 +22,15 @@ export default function CreateAccount(props) {
     const [roleErr, setRoleErr] = useState(false)
 
 
-    let istrue = () => {
-        if (validForm) {
+    const [items, setItems] = useState({ allData: [] })
+    let istrue = (event) => {
+        event.preventDefault()
+        if (validForm()) {
             handleSubmit()
         }
     }
 
     const validForm = (event) => {
-        event.preventDefault()
         const isValid = true
 
         if (userName.trim().match(/^[a-zA-Z ]*$/) && userName !== '') {
@@ -95,8 +96,45 @@ export default function CreateAccount(props) {
             //return isValid
 
         }
+        return sedCorr()
+
+    }
+
+
+    let sedCorr = async () => {
         if (userNameErr !== true && userEmailErr !== true && userMobileErr !== true && userPassErr !== true && genderErr !== true && roleErr !== true && conPassErr !== true) {
-            return isValid
+            return true
+        }
+    }
+
+    useEffect(() => {
+        getAllProduct()
+    }, [])
+
+    let getAllProduct = async () => {
+        const url = `https://react-magicshopping.firebaseio.com/addproduct.json`
+
+        //const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
+
+        try {
+            const response = await Axios.get(url)
+
+            let fetchedAccount = [] //creating new array 
+            for (let key in response.data) {
+                let account = response.data[key]
+
+                fetchedAccount.push({ // adding all the object to array
+                    ...account,//adding new id to object
+                    id: key,
+                    noq: null,
+                    total: account.price
+                })
+
+                setItems({ allData: fetchedAccount }) // setting updated object to old object
+            }
+        }
+        catch (err) {
+            console.log("Erroo ", err)
         }
 
     }
@@ -107,15 +145,15 @@ export default function CreateAccount(props) {
         userMobile: userMobile,
         userPass: userPass,
         gender: gender,
-        role: role
+        role: role,
+        product:items.allData
     }
-
     const handleSubmit = async () => {
 
-        const formData = data
+        //const formData = data
         const url = 'https://react-magicshopping.firebaseio.com/users.json'
         try {
-            const response = await Axios.post(url, formData)//it is a api call it returns a promise
+            const response = await Axios.post(url, data)//it is a api call it returns a promise
 
             if (response.status === 200) {
 
@@ -131,7 +169,7 @@ export default function CreateAccount(props) {
 
     return (
         <div className="col-md-6 col-sm-6 col-6 offset-3 card card-body mt-5">
-            <form onSubmit={validForm}>
+            <form onSubmit={istrue}>
                 <legend className='text-center'><b>Register Account</b></legend><br></br>
                 <div class="form-group row">
                     <label className="col-sm-3 col-form-label">Name</label>
@@ -198,7 +236,7 @@ export default function CreateAccount(props) {
                     <label className="col-sm-3 col-form-label">Password</label>
                     <div class="col-sm-8">
                         <input name="userPass"
-                            className="form-control" type="text"
+                            className="form-control" type="password"
                             placeholder="Enter Password"
                             onChange={(e) => { setUserPass(e.target.value) }}
                             value={userPass} />
@@ -210,7 +248,7 @@ export default function CreateAccount(props) {
                     <label className="col-sm-3 col-form-label"> Confirm Password</label>
                     <div class="col-sm-8">
                         <input name="conPass"
-                            className="form-control" type="text"
+                            className="form-control" type="password"
                             placeholder="Enter Confirm Password"
                             onChange={(e) => { setConPass(e.target.value) }}
                             value={conPass} />

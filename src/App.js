@@ -7,10 +7,6 @@ class App extends React.Component {
     login: false,
     user: false,
 
-    data: null,
-    setMyAc: (e) => {
-      this.setMyAcount(e)
-    },
     setUser: (e) => {
       this.setIsUser(e)
     },
@@ -33,13 +29,6 @@ class App extends React.Component {
     })
   }
 
-  setMyAcount = (e) => {
-    this.setMyAc({
-      ...this.state,
-      data: e
-    })
-    console.log(this.state.data)
-  }
 
   render() {
     return (

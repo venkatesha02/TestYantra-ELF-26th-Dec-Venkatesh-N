@@ -15,25 +15,25 @@ export default function AddProduct(props) {
     const [noqErr, setNoqErr] = useState(false)
     const [imgErr, setImgErr] = useState(false)
 
-    const isTrue=()=>{
+    const isTrue = (event) => {
+        event.preventDefault()
+
         if (validForm) {
             handleSubmit()
         }
     }
-    
+
 
     const validForm = (event) => {
-        
-        event.preventDefault()
 
-        const isValid = true
+
+        //const isValid = true
 
         if (itemName.trim().match(/^[a-zA-Z ]*$/) && itemName !== '') {
             setItemNameErr(false)
         }
         else {
             setItemNameErr(true)
-          
 
         }
         if (brand.trim().match(/^[a-zA-Z ]*$/) && brand !== '') {
@@ -42,7 +42,6 @@ export default function AddProduct(props) {
         }
         else {
             setBrandErr(true)
-         
 
         }
         if (price.trim().match(/^[0-9]*$/) && price !== '') {
@@ -50,7 +49,6 @@ export default function AddProduct(props) {
         }
         else {
             setPriceErr(true)
-            
 
         }
         if (noq.trim().match(/^[0-9]*$/) && noq !== "") {
@@ -59,8 +57,6 @@ export default function AddProduct(props) {
         }
         else {
             setNoqErr(true)
-           
-
         }
 
         if (img !== '') {
@@ -68,20 +64,27 @@ export default function AddProduct(props) {
         }
         else {
             setImgErr(true)
-            
 
         }
-        if (itemNameErr !== true && brandErr !== true && priceErr !== true && noqErr !== true && imgErr !== true) {
-            return isValid
-        }
+        return sedCorr()
     }
 
+    let sedCorr = async () => {
+        if (itemNameErr !== true && brandErr !== true && priceErr !== true && noqErr !== true && imgErr !== true) {
+
+            return true
+
+        }
+    }
     const data = {
         itemName: itemName,
         brand: brand,
         price: price,
         noq: noq,
-        img: img
+        img: img,
+        wish: false,
+        cart: false,
+        myOrder: false
     }
 
     const handleSubmit = async () => {
@@ -98,7 +101,7 @@ export default function AddProduct(props) {
                 setPrice('')
                 setImg('')
                 setBrand('')
-                console.log("Data added")
+                //console.log("Data added")
                 //props.history.push("/Login")// navigate the page   programatically
             }
         }
@@ -109,7 +112,7 @@ export default function AddProduct(props) {
 
     return (
         <div className="col-md-6 col-sm-6 col-6 offset-3 card card-body mt-5">
-            <form onSubmit={validForm}>
+            <form onSubmit={isTrue}>
                 <legend className='text-center'><b>Add Product</b></legend><br></br>
                 <div class="form-group row">
                     <label className="col-sm-3 col-form-label">Product Name</label>

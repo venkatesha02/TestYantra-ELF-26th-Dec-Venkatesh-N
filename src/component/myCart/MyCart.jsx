@@ -3,7 +3,8 @@ import Axios from 'axios'
 import { useState } from 'react'
 
 export default function MyCart(props) {
-    const mobile = localStorage.getItem('mobile')
+    const uniqId = localStorage.getItem('id')
+
 
     //const [quantiy, setQuantiy] = useState('')
     const [items, setItems] = useState({ allData: [] })
@@ -15,36 +16,24 @@ export default function MyCart(props) {
     }, [])
     // Getting data from server
     let getAllAccounts = async () => {
-
-        const url = `https://react-magicshopping.firebaseio.com/cart${mobile}.json`
-
-        //const url = 'https://react-magicshopping.firebaseio.com/addtoCart.json'
-
+        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
         try {
             const response = await Axios.get(url)
+            let data = response.data
 
-            //console.log("Response ", response)
-            let fetchedAccount = [] //creating new array 
-            for (let key in response.data) {
-                let account = response.data[key]
+            let filt = data.filter(val => { return val.cart === true })
 
-                fetchedAccount.push({ // adding all the object to array
-                    ...account,//adding new id to object
-                    id: key,
-                    noq: null,
-                    total: account.price
+            if (response.status === 200) {
+                setItems({
+                    ...items.allData,
+                    allData: filt
                 })
-                //console.log('sdjhg',fetchedAccount)
-
-                setItems({ allData: fetchedAccount }) // setting updated object to old object
-                //console.log('sdhfsjdfgjsdhfgjsgfjsfh',items)
             }
         }
         catch (err) {
             console.log("Erroo ", err)
         }
     }
-
 
     let qut = (qunt, val1) => {
         let all = items.allData
@@ -54,26 +43,40 @@ export default function MyCart(props) {
                     val1.total = qunt * val1.price)
             }
         })
-        setItems({ allData: all })
+        setItems({
+            ...items.allData,
+            allData: all
+        })
     }
-    const removeCart = async (val) => {
-        const id = val.id;
 
-        const url = `https://react-magicshopping.firebaseio.com/cart${mobile}/${id}/.json`
 
-        //const url = 'https://react-magicshopping.firebaseio.com/addtoCart/' + id + '/.json'
+    const removeCart = async (e) => {
+
+        let data = items.allData
+        data.map(val => {
+            if (val.id === e.id) {
+                return val.cart = !e.cart
+            }
+            return val
+        })
+        setItems({
+            ...items.allData,
+            allData: data
+        })
+
+        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
 
         try {
-            const response = await Axios.delete(url)
+            const response = await Axios.put(url, data)
             const myAccount = [...items.allData]
 
-            const index = myAccount.indexOf(val)
+            const index = myAccount.indexOf(e)
 
             myAccount.splice(index, 1)
 
             setItems({ allData: myAccount })
 
-            console.log("Response ", response)
+            //console.log("Response ", response)
         }
         catch (error) {
             console.log("Error ", error)
@@ -86,11 +89,18 @@ export default function MyCart(props) {
     //let netAmount = rs + totalPrice
     //let itemTotal = rs;
 
-    let handleClose=()=>{
-    props.history.push('/showProduct')
+    let handleClose = () => {
+        setItems({
+            ...items.allData
+        })
+        items.allData.map((val) => {
+            removeCart(val)
+            
+        })
+        props.history.push('/placeOrder')
     }
 
-
+    
     return (
         <>
             <div className='container' >
@@ -113,8 +123,8 @@ export default function MyCart(props) {
                                             <p style={{ display: 'none' }}>{rs = rs + Number(val.total), tc = tc + Number(val.price)}</p>
 
                                             <select className="form-control col-md-4" value={val.noq} onChange={(e) => { qut(e.target.value, val) }} name='quantity' required>
-                                                <option selected disabled >Quantity</option>
-                                                <option value='1'>1</option>
+                                                <option disabled >Quantity</option>
+                                                <option value='1' selected>1</option>
                                                 <option value='2'>2</option>
                                                 <option value='3'>3</option>
                                             </select><br />
@@ -134,26 +144,24 @@ export default function MyCart(props) {
                             <p className='card-text'><h5>Price ({items.allData.length} itmes)  :  {rs}</h5></p>
                             <p className='card-text'><h5>Delivery Fee :  Free</h5></p>
                             <p className='card-text'><h5>----------------------------</h5></p>
+                            <p style={{ display: 'none' }}>{localStorage.setItem('total', rs)}</p>
+
                             <p className='card-text'><h5>Payable Amount : {rs}</h5></p>
                             <button type="button" className='btn btn-outline-success ml-2' data-toggle="modal" data-target="#myModal">Place order</button>
 
-                            
+
                         </div>
                     </div>
-
-
 
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    {/* <h4 class="modal-title">Modal Header</h4> */}
                                 </div>
                                 <div class="modal-body">
                                     <p>Your order Placed Successfully </p>
                                     <p>Thank you! </p>
-
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" onClick={handleClose} class="btn btn-default" data-dismiss="modal">Close</button>

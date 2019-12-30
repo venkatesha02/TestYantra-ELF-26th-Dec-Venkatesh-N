@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 export default function WishList() {
 
-    const mobile = localStorage.getItem('mobile')
+    const uniqId = localStorage.getItem('id')
 
     const [items, setItems] = useState({ allData: [] })
 
@@ -14,22 +14,20 @@ export default function WishList() {
 
     }, [])
 
-
     // Getting data from server
     let getAllAccounts = async () => {
-        const url = `https://react-magicshopping.firebaseio.com/wishlist${mobile}.json`
+        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
         try {
             const response = await Axios.get(url)
-            //console.log("Response ", response)
-            let fetchedAccount = [] //creating new array 
-            for (let key in response.data) {
-                let account = response.data[key]
+            let data = response.data
 
-                fetchedAccount.push({ // adding all the object to array
-                    ...account,//adding new id to object
-                    id: key
+            let filt = data.filter(val => { return val.wish === true })
+
+            if (response.status === 200) {
+                setItems({
+                    ...items.allData,
+                    allData: filt
                 })
-                setItems({ allData: fetchedAccount }) // setting updated object to old object
             }
         }
         catch (err) {
@@ -37,57 +35,66 @@ export default function WishList() {
         }
     }
 
+    const removeWishList = async (e) => {
 
-    const removeWishList = async (val) => {
-        const id = val.id;
-       
-        const url = `https://react-magicshopping.firebaseio.com/wishlist${mobile}/${id}/.json`
-
-        //const url = 'https://react-magicshopping.firebaseio.com/wishList/' + id + '/.json'
-        try {
-            const response = await Axios.delete(url)
-            const myAccount = [...items.allData]
-
-            const index = myAccount.indexOf(val)
-
-            myAccount.splice(index, 1)
-
-            setItems({ allData: myAccount })
-
-            //console.log("Response ", response)
+    let data = items.allData
+    data.map(val => {
+        if (val.id === e.id) {
+            return val.wish = !e.wish
         }
-        catch (error) {
-            console.log("Error ", error)
+        return val
+    })
+    setItems({
+        ...items.allData,
+        allData: data
+    })
 
-        }
+    const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
+
+    try {
+        const response = await Axios.put(url, data)
+        const myAccount = [...items.allData]
+
+        const index = myAccount.indexOf(e)
+
+        myAccount.splice(index, 1)
+
+        setItems({ allData: myAccount })
+
+        //console.log("Response ", response)
     }
+    catch (error) {
+        console.log("Error ", error)
 
-    return (
-        <>
-            <div className='container' >
-                <div>
-                    <h3 className='text-center'>Your Wish List</h3>
-                    {items.allData.map((val) => {
-                        return (
-                            <>
-                                <div key={val.id} className='card col-md-4 mt-2 ml-2 float-left'>
-                                    <div className='card-body'>
-                                        <div className='col-md-4 float-right'>
-                                            <img className='card-img-top p-1' width='100%' height='120px' src={val.img} alt='pimg' ></img>
-                                        </div>
-                                        <p className='card-text'><h5>{val.itemName}</h5></p>
-                                        <p className='card-text'><h5>{val.brand}</h5></p>
-                                        <p className='card-text'><h5>Rs. {val.price}</h5></p>
+    }
+}
 
-                                        <button className='btn btn-danger' onClick={() => { removeWishList(val) }}><i className="fa fa-trash"></i>  REMOVE </button>
+return (
+    <>
+        <div className='container' >
+            <div className='mt-4'>
+                <h3 className='ml-2'>Your Wish List</h3>
+                {items.allData.map((val) => {
+                    return (
+                        <>
+                            <div key={val.id} className='card col-md-8 mt-2 ml-2'>
+                                <div className='card-body'>
+                                    <div className='col-md-4 float-right'>
+                                        <img className='card-img-top p-1' width='100%' height='120px' src={val.img} alt='pimg' ></img>
                                     </div>
+                                    <p className='card-text'><h5>{val.itemName}</h5></p>
+                                    <p className='card-text'><h5>{val.brand}</h5></p>
+                                    <p className='card-text'><h5>Rs. {val.price}</h5></p>
+
+                                    <button className='btn btn-outline-danger' onClick={() => { removeWishList(val) }}><i className="fa fa-trash"></i>  REMOVE </button>
                                 </div>
-                            </>
-                        )
-                    })
-                    }
-                </div>
-            </div >
-        </>
-    )
+                            </div>
+                        </>
+                    )
+                })
+                }
+            </div>
+        </div >
+    </>
+)
 }
