@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Axios from 'axios'
 import { useState } from 'react'
 
-export default function MyCart() {
+export default function MyCart(props) {
     const mobile = localStorage.getItem('mobile')
 
     //const [quantiy, setQuantiy] = useState('')
@@ -86,6 +86,11 @@ export default function MyCart() {
     //let netAmount = rs + totalPrice
     //let itemTotal = rs;
 
+    let handleClose=()=>{
+    props.history.push('/showProduct')
+    }
+
+
     return (
         <>
             <div className='container' >
@@ -130,10 +135,38 @@ export default function MyCart() {
                             <p className='card-text'><h5>Delivery Fee :  Free</h5></p>
                             <p className='card-text'><h5>----------------------------</h5></p>
                             <p className='card-text'><h5>Payable Amount : {rs}</h5></p>
-                            <button className='btn btn-outline-success ml-2'>Place order</button>
+                            <button type="button" className='btn btn-outline-success ml-2' data-toggle="modal" data-target="#myModal">Place order</button>
+
+                            
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    {/* <h4 class="modal-title">Modal Header</h4> */}
+                                </div>
+                                <div class="modal-body">
+                                    <p>Your order Placed Successfully </p>
+                                    <p>Thank you! </p>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onClick={handleClose} class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
+
+
+
+
+
                 </div>
             </div>
         </>

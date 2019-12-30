@@ -131,12 +131,7 @@ export default function Header() {
                 <Route path='/myWishlist' component={WishList} />
                 <Route path='/myCart' component={MyCart} />
                 <Route path='/myAccount' component={MyAccount} />
-            </> : <p style={{ display: 'none' }} className='col-md-4 col-sm-6 mt-5'><img src='oops.png' alt='err' /></p>}
-
-
-
-
-
+            </> : <p style={{display:'none'}} className='col-md-4 col-sm-6 mt-5 offset-2'><img src='oops.png' alt='err' /></p>}
         </Router >
     )
 }
