@@ -5,7 +5,6 @@ import { useState } from 'react'
 export default function MyCart(props) {
     const uniqId = localStorage.getItem('id')
 
-
     //const [quantiy, setQuantiy] = useState('')
     const [items, setItems] = useState({ allData: [] })
 
@@ -50,9 +49,8 @@ export default function MyCart(props) {
     }
 
 
-    const removeCart = async (e) => {
-
-        let data = items.allData
+    let removeCart = async (e) => {
+        let data = [...items.allData]
         data.map(val => {
             if (val.id === e.id) {
                 return val.cart = !e.cart
@@ -63,23 +61,19 @@ export default function MyCart(props) {
             ...items.allData,
             allData: data
         })
-
+        //const wishItem = val
         const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
 
         try {
             const response = await Axios.put(url, data)
-            const myAccount = [...items.allData]
-
-            const index = myAccount.indexOf(e)
-
-            myAccount.splice(index, 1)
-
-            setItems({ allData: myAccount })
-
-            //console.log("Response ", response)
+            if (response.status === 200) {
+                console.log('Data updated', response)
+            } else {
+                console.log("Err")
+            }
         }
-        catch (error) {
-            console.log("Error ", error)
+        catch (err) {
+            console.log("Err", err)
 
         }
     }
@@ -90,14 +84,11 @@ export default function MyCart(props) {
     //let itemTotal = rs;
 
     let handleClose = () => {
-        setItems({
-            ...items.allData
-        })
+        
         items.allData.map((val) => {
-            removeCart(val)
-            
+            removeCart(val) 
         })
-        props.history.push('/placeOrder')
+        //props.history.push('/placeOrder')
     }
 
     

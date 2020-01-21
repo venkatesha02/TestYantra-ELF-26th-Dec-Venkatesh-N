@@ -49,7 +49,6 @@ export default function Header(props) {
                                                     <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/showProduct'><i className="fa fa-binoculars">Product</i></Link>
-
                                                         </li>
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/myWishlist'><i className="fa fa-heart">My Wishlist</i></Link>
@@ -59,6 +58,9 @@ export default function Header(props) {
                                                         </li>
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/myAccount'><i className="fa fa-user-circle">My Account</i></Link>
+                                                        </li>
+                                                        <li className="nav-item active ">
+                                                            <Link className="nav-link" to='/placeOrder'><i className="fa fa-bags-shopping">Placed Order</i></Link>
                                                         </li>
                                                     </ul>
                                                     <ul className='navbar-nav'>
@@ -92,6 +94,9 @@ export default function Header(props) {
                                                         </li>
                                                         <li className="nav-item active ">
                                                             <Link className="nav-link" to='/myAccount'><i className="fa fa-user-circle">My Account</i></Link>
+                                                        </li>
+                                                        <li className="nav-item active ">
+                                                            <Link className="nav-link" to='/placeOrder'><i className="fa ">Placed Order</i></Link>
                                                         </li>
                                                     </ul>
                                                     <ul className='navbar-nav'>

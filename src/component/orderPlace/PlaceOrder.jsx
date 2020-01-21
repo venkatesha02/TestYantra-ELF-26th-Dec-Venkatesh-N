@@ -20,7 +20,7 @@ export default function PlaceOrder(props) {
             const response = await Axios.get(url)
             let data = response.data
 
-            let filt = data.filter(val => { return val.cart === true })
+            let filt = data.filter(val => { return val.myOrder === true })
 
             if (response.status === 200) {
                 setItems({

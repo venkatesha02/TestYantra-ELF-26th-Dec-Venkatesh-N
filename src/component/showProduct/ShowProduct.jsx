@@ -9,7 +9,7 @@ export default function ShowProduct() {
     // getting all itms from database
     const [items, setItems] = useState({ all: [] })
 
-      // filterd Items
+    // filterd Items
     const [product, setProduct] = useState({ data1: [] })
 
     useEffect(() => {
@@ -21,76 +21,77 @@ export default function ShowProduct() {
 
     // Getting all data from server
     let getAllAccounts = async () => {
-        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}.json`
+        const url = `https://react-magicshopping.firebaseio.com/addproduct.json`
 
         try {
             const response = await Axios.get(url)
-            let data = response.data.product
             if (response.status === 200) {
-                setItems({
-                    ...items.all,
-                    all: data
-                })
+
+                let fetchedAccount = []
+                for (let key in response.data) {
+                    let account = response.data[key]
+
+                    fetchedAccount.push({
+                        ...account,
+                        id: key
+                    })
+
+                    setItems({
+                        ...items.all,
+                        all: fetchedAccount
+                    })
+                }
             }
         }
         catch (err) {
             console.log("Erroo ", err)
         }
     }
-
+//---------------------------------------------------------------------------------------------
     let searchProduct = (event) => {
-        let inputs = event
-        const data = items.all.filter(val => val.itemName.startsWith(inputs))
 
+        let allData = items.all
+
+        const data = allData.filter(val => val.itemName.startsWith(event))
         let arr = [];
         for (const key in data) {
             arr.push({
                 ...data[key],
-             
             })
         }
         if (arr) {
-            setProduct({ data1: arr })
+            setProduct({
+                ...product.data1,
+                data1: arr
+            })
         } else {
-            setProduct({ data1: [] })
+            setProduct({
+                ...product.data1,
+                data1: []
+            })
         }
-    }
 
-    let handleClick = (val) => {
+    }
+//----------------------------------------------------------------------------------------
+    let handleClick = async (val) => {
         //console.log(val)
         let data = product.data1
 
-        wishUpdateAll(val)
-
         data.map((e) => {
             if (e.id === val.id) {
-                //count++
                 return e.wish = !val.wish
             }
             return e
         })
         setProduct({ data1: data })
-    }
 
-    let wishUpdateAll = async (e) => {
-        let data = items.all
-        data.map(val => {
-            if (val.id === e.id) {
-                return val.wish = !e.wish
-            }
-            return val
-        })
-        setItems({
-            ...items.all,
-            all: data
-        })
         //const wishItem = val
-        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
+        const url = `https://react-magicshopping.firebaseio.com/wishllist/${uniqId}.json`
 
         try {
-            const response = await Axios.put(url, data)
+            const response = await Axios.put(url, val)
             if (response.status === 200) {
-                console.log('Data updated', response)
+                console.log('wishlist added', response)
             } else {
                 console.log("Err")
             }
@@ -101,43 +102,29 @@ export default function ShowProduct() {
         }
     }
 
-
     //-------------------------------------------------------------------------------------------
-    let addTocart = (val) => {
+    let addTocart = async (val) => {
         //console.log(val)
         let data = product.data1
 
-        cartUpdateAll(val)
+        //cartUpdateAll(val)
 
         data.map((e) => {
             if (e.id === val.id) {
-                //count++
+              
                 return e.cart = !val.cart
             }
             return e
         })
         setProduct({ data1: data })
-    }
 
-    let cartUpdateAll = async (e) => {
-        let data = items.all
-        data.map(val => {
-            if (val.id === e.id) {
-                return val.cart = !e.cart
-            }
-            return val
-        })
-        setItems({
-            ...items,
-            all: data
-        })
-        //const wishItem = val
-        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
+
+        const url = `https://react-magicshopping.firebaseio.com/cartlist/${uniqId}.json`
 
         try {
-            const response = await Axios.put(url, data)
+            const response = await Axios.post(url, val)
             if (response.status === 200) {
-                console.log('Data updated', response)
+                console.log('cartlist added', response)
             } else {
                 console.log("Err")
             }
@@ -149,34 +136,15 @@ export default function ShowProduct() {
     }
 
     //-------------------------------------------------------------------------------------------
-    //console.log(mobile)
-    /* const addTocart = async (val) => {
-        const cartItem = val
-        const url = `https://react-magicshopping.firebaseio.com/users/${uniqId}/product.json`
-        try {
 
-            const response = await Axios.post(url, cartItem)
-            if (response.status === 200) {
-                console.log('OK')
-
-            }
-            else {
-                console.log("err")
-            }
-        }
-        catch (err) {
-            console.log('Err', err)
-        }
-
-    }
- */
     return (
         <>
             <Search inputSearch={searchProduct} />
+
             {product.data1.map((val) => {
                 return (
                     <div className='container-fluid mt-4'>
-                        <div className='col-md-3 col-sm-12 col-12 mt-2 card float-left'>
+                        <div className='col-md-3 col-sm-12 col-12 mt-2 ml-2 card float-left'>
                             <div key={val.id} className='card-body'>
 
                                 {val.wish ? <i style={{ color: 'red' }} onClick={() => { handleClick(val) }} className="fa fa-heart"></i> :
@@ -197,4 +165,3 @@ export default function ShowProduct() {
         </>
     )
 }
-
